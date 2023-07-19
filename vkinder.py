@@ -1,4 +1,3 @@
-
 from random import randrange
 from vk_api_wrapper import VkApiWrapper
 from database_wrapper import DatabaseWrapper
