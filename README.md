@@ -7,7 +7,7 @@
     sqlalchemy
     requests
 ```
-2. [Токен пользователя можно получить здесь](https://vkhost.github.io/)
+2. [Токен пользователя](https://vkhost.github.io/)
 3. Запуск файла vkinder.py
 
 ## Задание к дипломной работе
