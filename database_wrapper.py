@@ -19,22 +19,15 @@ class User(Base):
 
 
 class DatabaseWrapper:
-    def __init__(self):
-        self.engine = create_engine('sqlite:///vkinder.db', echo=True)
-        Base.metadata.create_all(self.engine)
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+    def __init__(self, vk_api_wrapper):
+        self.vk_api_wrapper = vk_api_wrapper
 
     def save_user(self, user):
-        self.session.add(user)
-        self.session.commit()
+        # Сохранение пользователя в базе данных
 
     def get_user(self, user_id):
-        return self.session.query(User).filter_by(id=user_id).first()
+        # Получение пользователя из базы данных
 
     def find_matching_users(self, user):
-        matching_users = self.session.query(User).\
-            filter_by(age=user.get_age(), sex=user.get_sex(), city=user.get_city(),
-                      relationship_status=user.get_relationship_status()).\
-            filter(User.id != user.get_id()).all()
+        matching_users = self.vk_api_wrapper.search_users(user.get_age(), user.get_sex(), user.get_city(), user.get_relationship_status())
         return matching_users
