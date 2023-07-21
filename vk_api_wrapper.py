@@ -12,15 +12,21 @@ class VkApiWrapper:
             'v': '5.131'
         }
         response = requests.get('https://api.vk.com/method/users.get', params=params)
-        data = response.json()
-        user_data = data['response'][0]
-        id = user_data['id']
-        age = self.calculate_age(user_data['bdate'])
-        sex = user_data['sex']
-        city = user_data.get('city', {}).get('title', '')
-        relationship_status = user_data.get('relation', '')
+        if response.status_code == 200:
+            data = response.json()
+            if 'response' in data:
+                user_data = data['response'][0]
+                id = user_data.get('id', None)
+                bdate = user_data.get('bdate', None)
+                sex = user_data.get('sex', None)
+                city = user_data.get('city', {}).get('title', '') if 'city' in user_data else ''
+                relationship_status = user_data.get('relation', '') if 'relation' in user_data else ''
 
-        return User(id=id, age=age, sex=sex, city=city, relationship_status=relationship_status)
+                if id is not None and bdate is not None and sex is not None:
+                    age = self.calculate_age(bdate)
+                    return User(id=id, age=age, sex=sex, city=city, relationship_status=relationship_status)
+
+        return None
 
     def calculate_age(self, bdate):
         # Реализовать функцию для расчета возраста пользователя по его дате рождения
@@ -36,12 +42,16 @@ class VkApiWrapper:
             'v': '5.131'
         }
         response = requests.get('https://api.vk.com/method/photos.get', params=params)
-        data = response.json()
-        photos = data['response']['items']
-        top_photos = []
-        for photo in photos:
-            photo_url = photo['sizes'][-1]['url']
-            likes_count = photo['likes']['count']
-            comments_count = photo['comments']['count']
-            top_photos.append((photo_url, likes_count, comments_count))
-        return top_photos
+        if response.status_code == 200:
+            data = response.json()
+            if 'response' in data:
+                photos = data['response']['items']
+                top_photos = []
+                for photo in photos:
+                    photo_url = photo['sizes'][-1]['url']
+                    likes_count = photo['likes']['count']
+                    comments_count = photo['comments']['count']
+                    top_photos.append((photo_url, likes_count, comments_count))
+                return top_photos
+
+        return []
