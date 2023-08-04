@@ -23,10 +23,12 @@ class DatabaseWrapper:
         self.vk_api_wrapper = vk_api_wrapper
 
     def save_user(self, user):
-        # Сохранение пользователя в базе данных
+        # код для сохранения пользователя в базе данных
+        pass
 
     def get_user(self, user_id):
-        # Получение пользователя из базы данных
+        # код для получения пользователя из базы данных
+        pass
 
     def find_matching_users(self, user):
         matching_users = self.vk_api_wrapper.search_users(user.get_age(), user.get_sex(), user.get_city(), user.get_relationship_status())
